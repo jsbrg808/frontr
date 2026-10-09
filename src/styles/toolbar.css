@@ -1,0 +1,46 @@
+/* frontt의 toolbar.css는 body { font-size: 12px } 를 전역으로 둬서
+   이 스타일을 쓰는 페이지 전체(엑셀 미리보기/도감)의 기본 글자 크기를 낮췄다.
+   SPA에서는 body를 모든 라우트가 공유하므로, 해당 페이지 컨텐츠에만
+   이 클래스로 스코프해서 같은 상속 결과를 재현한다. */
+.toolbar-scope {
+  color: #334155;
+  font-size: 12px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border-bottom: 1px solid #d9d9d9;
+  font-size: 12px;
+}
+
+.download {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid #7890a0;
+  border-radius: 4px;
+  color: #17364a;
+  background: #eef5f8;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.download:hover {
+  background: #def0f8;
+}
+
+.download.disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border-color: #cbd5e1;
+  cursor: not-allowed;
+  pointer-events: none;
+}

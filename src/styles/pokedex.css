@@ -1,0 +1,77 @@
+.pokedex-preview-wrap {
+  overflow: hidden;
+  padding: 10px 12px 18px;
+  box-sizing: border-box;
+}
+
+.log-console {
+  background: #fafafa;
+  color: #1e293b;
+  font-family: GulimChe, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #c9c9c9;
+  height: calc(100vh - 170px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.log-entry {
+  margin-bottom: 4px;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.log-time {
+  color: #64748b;
+  margin-right: 8px;
+}
+
+.log-success {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.log-error {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.log-info {
+  color: #1e293b;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.checkbox-item input {
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+}
+
+.clear-btn {
+  margin-left: auto;
+  font-size: 11px;
+  color: #64748b;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.clear-btn:hover {
+  color: #334155;
+}

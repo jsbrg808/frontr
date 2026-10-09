@@ -1,0 +1,51 @@
+.excel-preview-wrap {
+  height: calc(100vh - 170px);
+  overflow: auto;
+  padding: 10px 12px 18px;
+  box-sizing: border-box;
+}
+
+.excel-preview {
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-family: GulimChe, 'Courier New', monospace;
+}
+
+.excel-preview td {
+  box-sizing: border-box;
+  height: 20px;
+  padding: 1px 3px;
+  border: 1px solid #c9c9c9;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.excel-preview td.editable {
+  cursor: text;
+  outline: 1px solid transparent;
+}
+
+.excel-preview td.editable:focus {
+  outline: 2px solid #4f8fc0;
+  outline-offset: -2px;
+}
+
+.excel-preview td.editable.editing {
+  background-color: #fff !important;
+  box-shadow: inset 0 0 0 2px #4f8fc0;
+}
+
+.excel-preview td.saving {
+  opacity: 0.65;
+}
+
+.excel-preview td.saved {
+  outline: 2px solid #4e9b5d;
+  outline-offset: -2px;
+}
+
+.excel-preview td.error {
+  outline: 2px solid #c44;
+  outline-offset: -2px;
+}
