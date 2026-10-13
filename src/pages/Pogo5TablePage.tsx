@@ -20,6 +20,7 @@ export default function Pogo5TablePage() {
   const [insertInputs, setInsertInputs] = useState<Record<number, { als: string; formNo: string; alph: string }>>({})
 
   const rowRefs = useRef<Record<number, HTMLTableCellElement | null>>({})
+  const inpDefaultRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     if (!tbl) return
@@ -50,21 +51,35 @@ export default function Pogo5TablePage() {
   }
 
   const reload = (srlNo?: number) => {
-    if (srlNo !== undefined) {
-      navigate(`/pogo/${tbl}#srlNo${srlNo}`, { replace: true })
-    }
-    apiGet<Pogo5TableListResponse>(`/api/pogo/${tbl}`, srchNm ? { srchNm } : undefined)
+    // frontt는 작업 후 redirect로 검색 조건 없이 전체 목록을 다시 렌더링한다(해시는 작업 대상 행만 남김).
+    navigate(`/pogo/${tbl}${srlNo !== undefined ? `#srlNo${srlNo}` : ''}`, { replace: true })
+    apiGet<Pogo5TableListResponse>(`/api/pogo/${tbl}`)
       .then((data) => setList(data.pogo5TableList))
       .catch((err: Error) => setError(err.message))
   }
 
   const handleSearch = () => {
     navigate(`/pogo/${tbl}${srchNm ? `?srchNm=${encodeURIComponent(srchNm)}` : ''}`)
+    // frontt(fnSrch → 전체 리로드)와 동일하게 포커스를 해제한다
+    const active = document.activeElement as HTMLElement | null
+    active?.blur()
+  }
+
+  // 작업 성공 후 frontt(전체 페이지 리로드)와 동일하게: 상단 입력·검색어 초기화, 선택 해제, 포커스 해제
+  const resetAfterAction = () => {
+    setInpDefault('')
+    setInpFor('')
+    setInpAlp('')
+    setSelectedSrlNo(null)
+    setSrchNm('')
+    const active = document.activeElement as HTMLElement | null
+    active?.blur()
   }
 
   const handleAppend = async () => {
     try {
       await apiPostForm(`/api/pogo/${tbl}/append`, { als: inpDefault, formNo: inpFor, alph: inpAlp })
+      resetAfterAction()
       reload()
     } catch (err) {
       setError((err as Error).message)
@@ -73,14 +88,16 @@ export default function Pogo5TablePage() {
 
   const handleUpdate = async () => {
     if (selectedSrlNo === null) return
+    const srlNo = selectedSrlNo
     try {
       await apiPostForm(`/api/pogo/${tbl}/update`, {
-        srlNo: String(selectedSrlNo),
+        srlNo: String(srlNo),
         als: inpDefault,
         formNo: inpFor,
         alph: inpAlp,
       })
-      reload(selectedSrlNo)
+      resetAfterAction()
+      reload(srlNo)
     } catch (err) {
       setError((err as Error).message)
     }
@@ -89,6 +106,7 @@ export default function Pogo5TablePage() {
   const handleDelete = async (srlNo: number) => {
     try {
       await apiPostForm(`/api/pogo/${tbl}/delete`, { srlNo: String(srlNo) })
+      resetAfterAction()
       reload(srlNo)
     } catch (err) {
       setError((err as Error).message)
@@ -99,6 +117,9 @@ export default function Pogo5TablePage() {
     const values = insertInputs[srlNo] ?? { als: '', formNo: '', alph: '' }
     try {
       await apiPostForm(`/api/pogo/${tbl}/insert`, { srlNo: String(srlNo), ...values })
+      // 해당 행의 삽입 입력 초기화(frontt는 전체 리로드로 빈 값이 됨)
+      setInsertInputs((prev) => ({ ...prev, [srlNo]: { als: '', formNo: '', alph: '' } }))
+      resetAfterAction()
       reload(srlNo)
     } catch (err) {
       setError((err as Error).message)
@@ -110,6 +131,8 @@ export default function Pogo5TablePage() {
     setInpDefault(item.als ?? '')
     setInpFor(item.formNo ?? '')
     setInpAlp(item.alph ?? '')
+    // frontt(fnSelect → inpDefault focus)와 동일하게
+    inpDefaultRef.current?.focus()
   }
 
   const rows: Pogo5TableVO[][] = []
@@ -137,7 +160,7 @@ export default function Pogo5TablePage() {
               <a onClick={handleSearch}>확인</a>
             </th>
             <th>
-              <input type="text" className="inp-als" value={inpDefault} onChange={(e) => setInpDefault(e.target.value)} />
+              <input type="text" className="inp-als" value={inpDefault} ref={inpDefaultRef} onChange={(e) => setInpDefault(e.target.value)} />
               {' / '}
               <input type="text" className="inp-for" value={inpFor} onChange={(e) => setInpFor(e.target.value)} />
               {' / '}
