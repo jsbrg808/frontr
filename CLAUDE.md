@@ -9,7 +9,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run lint` — run Oxlint (config in `.oxlintrc.json`)
 - `npm run preview` — preview the production build locally
 
-There is no test runner configured in this project.
+- `npm test` — run all tests once (Vitest; `npm run test:watch` for watch mode)
+
+## Testing
+
+Tests use Vitest (jsdom environment, config in `vite.config.ts`) with @testing-library/react. When adding or changing functionality, add/update tests covering it:
+
+- Existing suites: `src/api/client.test.ts` (HTTP client), `src/pages/Pogo5TablePage.test.tsx`, `src/pages/PogoExcelPreviewPage.test.tsx`, `src/pages/PokedexPage.test.tsx` (component tests).
+- `src/test/setup.ts` stubs `VITE_BACK_BASE_URL` (`http://back.test`) before any module import — never read the real `.env` in tests; mock `fetch` with `vi.stubGlobal` instead of mocking `src/api/client.ts`.
+- Component tests must call `cleanup()` in `afterEach` (RTL auto-cleanup is not reliable here).
 
 ## Architecture
 
