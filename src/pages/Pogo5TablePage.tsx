@@ -38,11 +38,12 @@ export default function Pogo5TablePage() {
     document.title = `포고 ${tbl} (${list.length})`
   }, [tbl, list.length])
 
+  // frontt(redirect → 네이티브 앵커 스크롤)와 동일하게 해당 행의 최상단 위치로 정렬한다
   useEffect(() => {
     const hash = window.location.hash
     if (hash) {
       const el = document.querySelector(hash)
-      el?.scrollIntoView({ block: 'center' })
+      el?.scrollIntoView({ block: 'start' })
     }
   }, [list])
 
